@@ -823,7 +823,12 @@ function love.update(dt)
 	end
 end
 
+local gameCanvas
+
 function love.draw()
+    love.graphics.setCanvas(gameCanvas)
+    love.graphics.clear()
+
 	shaders:predraw()
 
 	if gamestate == "menu" or gamestate == "mappackmenu" or gamestate == "onlinemenu" or gamestate == "options" then
@@ -837,6 +842,22 @@ function love.draw()
 	end
 
 	shaders:postdraw()
+
+    love.graphics.setCanvas()
+
+    local internalWidth = width * 16
+    local internalHeight = 224
+
+    love.graphics.draw(
+        gameCanvas,
+        love.graphics.getWidth() / 2,
+        love.graphics.getHeight() / 2,
+        0,
+        math.floor(love.graphics.getWidth() / internalWidth),
+        math.floor(love.graphics.getHeight() / internalHeight),
+        internalWidth / 2,
+        internalHeight / 2
+    )
 
 	love.graphics.setColor(1, 1,1)
 end
@@ -1231,7 +1252,7 @@ function continuegame()
 end
 
 function changescale(s, fullscreen)
-	scale = s
+	scale = 1
 
 	if fullscreen then
 		fullscreen = true
@@ -1240,7 +1261,9 @@ function changescale(s, fullscreen)
 	end
 
 	uispace = math.floor(width*16*scale/4)
-	love.window.setMode(width*16*scale, 224*scale, {fullscreen=fullscreen, vsync=vsync}) --27x14 blocks (15 blocks actual height)
+	love.window.setMode(1920, 1080, {fullscreen=fullscreen, vsync=vsync, resizable=true}) --27x14 blocks (15 blocks actual height)
+    gameCanvas = love.graphics.newCanvas(width*16, 224)
+    gameCanvas:setFilter("nearest", "nearest")
 
 	gamewidth = love.graphics.getWidth()
 	gameheight = love.graphics.getHeight()
