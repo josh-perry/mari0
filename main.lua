@@ -848,13 +848,18 @@ function love.draw()
     local internalWidth = width * 16
     local internalHeight = 224
 
+    local s = math.min(
+        love.graphics.getWidth() / internalWidth,
+        love.graphics.getHeight() / internalHeight
+    )
+
     love.graphics.draw(
         gameCanvas,
         love.graphics.getWidth() / 2,
         love.graphics.getHeight() / 2,
         0,
-        math.floor(love.graphics.getWidth() / internalWidth),
-        math.floor(love.graphics.getHeight() / internalHeight),
+        s,
+        s,
         internalWidth / 2,
         internalHeight / 2
     )
@@ -1257,11 +1262,10 @@ function changescale(s, fullscreen)
 	if fullscreen then
 		fullscreen = true
 		scale = 2
-		love.window.setMode(800, 600, {fullscreen=fullscreen, vsync=vsync})
+		--love.window.setMode(800, 600, {fullscreen=fullscreen, vsync=vsync})
 	end
 
 	uispace = math.floor(width*16*scale/4)
-	love.window.setMode(1920, 1080, {fullscreen=fullscreen, vsync=vsync, resizable=true}) --27x14 blocks (15 blocks actual height)
     gameCanvas = love.graphics.newCanvas(width*16, 224)
     gameCanvas:setFilter("nearest", "nearest")
 
